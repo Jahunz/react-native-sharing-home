@@ -29,6 +29,9 @@ export default function StyledDatePicker({
 }: StyledDatePickerProps) {
   const [showModal, setShowModal] = useState(false);
   const [tempDate, setTempDate] = useState<Date>(value || new Date());
+  React.useEffect(() => {
+    setTempDate(value || new Date());
+  }, [value]);
 
   const handleConfirm = () => {
     onChange(tempDate);

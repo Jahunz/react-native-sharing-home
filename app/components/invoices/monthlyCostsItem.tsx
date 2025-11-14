@@ -11,21 +11,14 @@ interface MonthlyCostsItemProps {
     memberName: string;
     monthlyExpense: MonthlyExpense;
     onDeleteMonthlyCostsItem: () => void;
-    onChangeConfirmation: (value: boolean) => void;
 }
 
 export default function MonthlyCostsItem({
     memberName,
     monthlyExpense,
     onDeleteMonthlyCostsItem,
-    onChangeConfirmation,
 }: MonthlyCostsItemProps) {
-    const confirmationCount = useMemo(
-        () =>
-            monthlyExpense.sharing.filter((expense) => expense.is_confirmed)
-                .length,
-        [monthlyExpense.sharing]
-    );
+    const confirmationCount = useMemo(() => monthlyExpense.sharing.length, [monthlyExpense.sharing]);
     return (
         <View className="bg-gray-100 my-3 rounded-2xl p-4">
             <HStack className="justify-between">
@@ -70,18 +63,7 @@ export default function MonthlyCostsItem({
                     </Pressable>
                 </View>
             </HStack>
-            <StyledButton
-                buttonText={
-                    monthlyExpense.is_confirmed ? "Unconfirmed" : "Confirm"
-                }
-                textClassName="text-black font-medium"
-                buttonClassName={`mt-4 h-10 rounded-xl ${
-                    monthlyExpense.is_confirmed ? "bg-red-500" : "bg-green-500"
-                }`}
-                onPress={() =>
-                    onChangeConfirmation(!monthlyExpense.is_confirmed)
-                }
-            />
+            {/* no assign/confirm button — splits are handled at creation time */}
         </View>
     );
 }

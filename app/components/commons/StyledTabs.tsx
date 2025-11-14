@@ -1,7 +1,7 @@
 import { Tab } from "@/app/constants/types";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Text } from "@/components/ui/text";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { Pressable } from "react-native";
 
 interface StyledTabsProps {
@@ -11,8 +11,17 @@ interface StyledTabsProps {
 
 export default function StyledTabs({ tabs, currentTabId }: StyledTabsProps) {
     const router = useRouter();
+    const params = useLocalSearchParams<{ roomId?: string; roomName?: string }>();
+    const roomId = params?.roomId;
+    const roomName = params?.roomName;
     const onChangeTab = (path: string) => {
-        router.replace(path as any);
+        // Preserve current roomId/roomName when switching tabs so child routes
+        // continue to receive the same room context.
+        if (roomId) {
+            router.replace({ pathname: path as any, params: { roomId, roomName } } as any);
+        } else {
+            router.replace(path as any);
+        }
     };
     return (
         <Grid

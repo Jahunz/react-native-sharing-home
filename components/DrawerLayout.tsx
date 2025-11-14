@@ -1,3 +1,4 @@
+import { removeData, getData } from '@/app/storage/async_storage';
 import Routes from "@/app/constants/Routes";
 import { AppIcon } from "@/components/AppIcon";
 import { ArrowLeftIcon, Icon } from "@/components/ui/icon";
@@ -21,10 +22,14 @@ export function DrawerLayout({
     const router = useRouter();
     const pathname = usePathname();
 
-    const isHomeScreen =
-        pathname.includes(Routes.HOME_MASTER_DASHBOARD) ||
-        pathname.includes(Routes.PROFILE) ||
-        pathname.includes(Routes.ROOM_MEMBER_DASHBOARD);
+    const normalizedPath = (pathname || '').toLowerCase().replace(/^\/+/, '');
+
+    // The router's pathname can have prefixes (for example: '/(tabs)/room-member/dashboard').
+    // Use a broader, case-insensitive match for key segments so the header reliably
+    // shows the hamburger on dashboard-like screens.
+    const isHomeScreen = /home-master|room-master|room-member|profile|welcome|dashboard/.test(
+        normalizedPath
+    );
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen);
@@ -35,8 +40,13 @@ export function DrawerLayout({
         setIsDrawerOpen(false);
     };
 
-    const handleLogout = () => {
-        router.replace(Routes.ROLE_SELECTION as any);
+    const handleLogout = async () => {
+        try {
+            await removeData("userRole");
+        } catch (e) {
+            console.error("Error clearing userRole on logout", e);
+        }
+        router.replace(Routes.LOGIN() as any);
     };
 
     return (
@@ -77,16 +87,53 @@ export function DrawerLayout({
                             {/* Menu Items */}
                             <View className="px-3">
                                 <Pressable
-                                    onPress={() =>
-                                        navigateTo(Routes.HOME_MASTER_DASHBOARD)
-                                    }
-                                    className={`flex-row items-center px-4 py-3 rounded-lg mb-2 ${
-                                        pathname.includes(
-                                            Routes.HOME_MASTER_DASHBOARD
-                                        )
-                                            ? "bg-gray-100"
-                                            : ""
-                                    }`}
+                                        onPress={async () => {
+                                            // If the current user is a room member but isn't
+                                            // assigned to any room yet, send them to Welcome
+                                            // instead of a dashboard that expects rooms.
+                                            try {
+                                                const userRole = await getData('userRole');
+                                                if (String(userRole) === 'room_member') {
+                                                    const userPhone = (await getData('userPhone')) || '';
+                                                    const rawRooms = await getData('rooms');
+                                                    const rooms = rawRooms ? JSON.parse(rawRooms) : [];
+                                                    let isMember = false;
+                                                    for (const r of rooms) {
+                                                        const membersRaw = await getData(`members:${r.id}`);
+                                                        const members = membersRaw ? JSON.parse(membersRaw) : [];
+                                                        if (
+                                                            userPhone &&
+                                                            members.find((m: any) => m.phoneNumber === userPhone)
+                                                        ) {
+                                                            isMember = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (!isMember) {
+                                                        router.replace(Routes.WELCOME as any);
+                                                        setIsDrawerOpen(false);
+                                                        return;
+                                                    }
+
+                                                    // otherwise go to the member dashboard
+                                                    router.replace(Routes.ROOM_MEMBER_DASHBOARD as any);
+                                                    setIsDrawerOpen(false);
+                                                    return;
+                                                }
+                                            } catch (e) {
+                                                console.error('Error deciding dashboard route', e);
+                                            }
+
+                                            navigateTo(Routes.HOME_MASTER_DASHBOARD);
+                                        }}
+                                        className={`flex-row items-center px-4 py-3 rounded-lg mb-2 ${
+                                            pathname.includes(
+                                                Routes.HOME_MASTER_DASHBOARD
+                                            )
+                                                ? 'bg-gray-100'
+                                                : ''
+                                        }`}
                                 >
                                     <View className="w-5 h-5 mr-3">
                                         <Text>⊞</Text>
@@ -162,7 +209,16 @@ export function DrawerLayout({
                             </Pressable>
                         ) : (
                             <Pressable
-                                onPress={() => router.back()}
+                                onPress={() => {
+                                    // If this path looks like a dashboard root (no back history),
+                                    // open the drawer instead of calling router.back which
+                                    // can trigger a GO_BACK warning in development.
+                                    if (/dashboard|room-member|home-master|room-master/.test(normalizedPath)) {
+                                        toggleDrawer();
+                                    } else {
+                                        router.back();
+                                    }
+                                }}
                                 className="mr-4"
                             >
                                 <Icon

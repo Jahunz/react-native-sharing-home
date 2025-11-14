@@ -6,6 +6,13 @@ type HMRoom = {
     memberCount: number;
     debtAmount: number;
     nextInvoiceDate: string;
+    // optional info about the house / home master managing this room
+    homeName?: string;
+    homeMaster?: {
+        id?: number;
+        name?: string;
+        phone?: string;
+    };
 };
 
 type RMRoom = {
@@ -26,7 +33,8 @@ type Member = {
 
 type Expense = {
     name: string;
-    price: number;
+    id?: number;
+    price: bigint;
     quantity: number;
 };
 
@@ -34,6 +42,16 @@ type FixedInvoice = {
     date: Date;
     expenses: Expense[];
     totalAmount: number;
+    eachMemberAmount: number;
+};
+
+type Invoice = {
+    id: number;
+    roomId: number;
+    date: string | Date;
+    expenses: Expense[];
+    // totalAmount stored as string (bigint serialized) to avoid JSON issues
+    totalAmount: string;
     eachMemberAmount: number;
 };
 
@@ -117,6 +135,7 @@ type Notification = {
 export {
     Expense,
     FixedInvoice,
+    Invoice,
     FullPersonalInvoiceHistory,
     FullSummaryInvoiceHistory,
     HMRoom,
@@ -132,3 +151,4 @@ export {
     SummaryInvoice,
     Tab,
 };
+

@@ -3,6 +3,7 @@ import { Button, ButtonText } from "@/components/ui/button";
 interface StyledButtonProps {
     buttonText: string;
     onPress: () => void;
+    disabled?: boolean;
     buttonClassName?: string;
     size?: "sm" | "md" | "lg";
     variant?: "solid" | "outline";
@@ -12,6 +13,7 @@ interface StyledButtonProps {
 export default function StyledButton({
     buttonText,
     onPress,
+    disabled = false,
     buttonClassName,
     size = "lg",
     variant = "solid",
@@ -21,6 +23,7 @@ export default function StyledButton({
     return (
         <Button
             onPress={onPress}
+            disabled={disabled}
             className={buttonClassName}
             size={size}
             variant={variant}

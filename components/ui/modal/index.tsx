@@ -44,7 +44,8 @@ cssInterop(AnimatedPressable, { className: 'style' });
 cssInterop(MotionView, { className: 'style' });
 
 const modalStyle = tva({
-  base: 'group/modal w-full h-full justify-center items-center web:pointer-events-none',
+  // ensure modal root sits above other overlays (drawers etc.)
+  base: 'group/modal w-full h-full justify-center items-center web:pointer-events-none z-50',
   variants: {
     size: {
       xs: '',
@@ -57,11 +58,13 @@ const modalStyle = tva({
 });
 
 const modalBackdropStyle = tva({
-  base: 'absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default',
+  // backdrop under the modal content, but above other UI
+  base: 'absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default z-40',
 });
 
 const modalContentStyle = tva({
-  base: 'bg-background-0 rounded-md overflow-hidden border border-outline-100 shadow-hard-2 p-6',
+  // content should be above the backdrop and other overlays
+  base: 'bg-background-0 rounded-md overflow-hidden border border-outline-100 shadow-hard-2 p-6 z-50',
   parentVariants: {
     size: {
       xs: 'w-[60%] max-w-[360px]',

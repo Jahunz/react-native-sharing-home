@@ -70,6 +70,7 @@ export default function SummaryTab() {
                     key={invoice.id}
                     invoice={invoice}
                     onShowExpense={handleShowExpense}
+                    roomId={roomId}
                 />
             ))}
         </View>

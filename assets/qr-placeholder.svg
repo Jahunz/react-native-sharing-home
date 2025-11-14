@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <!-- corner squares -->
+  <rect x="20" y="20" width="80" height="80" fill="#000" />
+  <rect x="300" y="20" width="80" height="80" fill="#000" />
+  <rect x="20" y="300" width="80" height="80" fill="#000" />
+  <!-- center pattern -->
+  <rect x="120" y="120" width="160" height="160" fill="#eeeeee" stroke="#000" stroke-width="3" />
+  <g fill="#000">
+    <rect x="140" y="140" width="20" height="20" />
+    <rect x="180" y="140" width="20" height="20" />
+    <rect x="220" y="140" width="20" height="20" />
+    <rect x="140" y="180" width="20" height="20" />
+    <rect x="220" y="180" width="20" height="20" />
+    <rect x="140" y="220" width="20" height="20" />
+    <rect x="180" y="220" width="20" height="20" />
+    <rect x="220" y="220" width="20" height="20" />
+  </g>
+  <text x="200" y="370" font-size="16" text-anchor="middle" fill="#666">QR PLACEHOLDER</text>
+</svg>

@@ -427,6 +427,36 @@ CheckCircleIcon.displayName = 'CheckCircleIcon';
 
 export { CheckIcon, CheckCircleIcon };
 
+const CrownIcon = createIcon({
+  Root: Svg,
+  viewBox: '0 0 24 24',
+  path: (
+    <>
+      {/* Crown outline: three peaks with a base */}
+      <Path
+        d="M2 16 L5 8 L9 14 L12 6 L15 14 L19 8 L22 16 L2 16 Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Base line */}
+      <Path
+        d="M2 16 H22"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Decorative jewels (small circles) on peaks */}
+      <Path d="M5 8 L5 8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M12 6 L12 6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M19 8 L19 8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+});
+
+CrownIcon.displayName = 'CrownIcon';
+export { CrownIcon };
+
 const ChevronUpIcon = createIcon({
   Root: Svg,
   viewBox: '0 0 24 24',

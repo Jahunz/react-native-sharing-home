@@ -3,6 +3,9 @@ const Routes = {
     LOGIN: (role?: string) => `screens/login${role ? `?role=${role}` : ""}`,
     SIGNUP: "screens/signup",
     PROFILE: "screens/profile",
+    WELCOME: "screens/welcome",
+    JOIN_ROOM: "screens/join-room",
+    ROOM_QR: "screens/room-qr",
     NOTIFICATIONS: "screens/notifications",
     // Home Master Screens
     HOME_MASTER_DASHBOARD: "screens/home-master/dashboard",
@@ -16,6 +19,7 @@ const Routes = {
     ROOM_MASTER_ROOM_DETAIL_MONTHLY_INVOICE:
         "screens/room-master/room-detail/monthly-invoice",
     ROOM_MASTER_ROOM_DETAIL_SUMMARY: "screens/room-master/room-detail/summary",
+    ROOM_MASTER_ROOM_DETAIL_INVOICE_HISTORY: "screens/room-master/room-detail/invoice-history",
     // Room Member Screens
     ROOM_MEMBER_DASHBOARD: "screens/room-member/dashboard",
     ROOM_MEMBER_ROOM_DETAIL_MEMBERS: "screens/room-member/room-detail/members",

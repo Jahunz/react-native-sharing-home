@@ -1,17 +1,12 @@
-import MemberInvoiceHistoryCard from "@/app/components/invoices/memberInvoiceHistoryCard";
 import RoomMasterInvoiceHistoryCard from "@/app/components/invoices/roomMasterInvoiceHistoryCard";
 import { ShortPersonalInvoiceHistory } from "@/app/constants/types";
-import { dummy_room_member_invoice_history_list } from "@/utils/dummy";
 import { useLocalSearchParams } from "expo-router";
 import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { getData } from "@/app/storage/async_storage";
-import { normalizePhone } from "@/app/storage/users";
-import { ROLE } from "@/app/constants/enum";
 import { formatDate } from "@/utils/format_date";
-// Removed New Invoice button — members create invoices from other flows
 
-interface MemberInvoiceHistory extends ShortPersonalInvoiceHistory {
+interface MasterInvoiceHistory extends ShortPersonalInvoiceHistory {
     is_show_expense: boolean;
 }
 export default function InvoiceHistoryTab() {
@@ -21,9 +16,8 @@ export default function InvoiceHistoryTab() {
     }>();
 
     const [invoiceHistory, setInvoiceHistory] = useState<
-        MemberInvoiceHistory[]
-    >(dummy_room_member_invoice_history_list);
-    const [isRoomMaster, setIsRoomMaster] = useState(false);
+        MasterInvoiceHistory[]
+    >([]);
 
     useEffect(() => {
         const loadInvoices = async () => {
@@ -47,25 +41,11 @@ export default function InvoiceHistoryTab() {
             } catch (e) {
                 console.error('Error loading invoices for room', roomId, e);
             }
-            // fallback: keep dummy list
-            setInvoiceHistory(dummy_room_member_invoice_history_list);
+            // fallback: keep empty list
+            setInvoiceHistory([]);
         };
 
         loadInvoices();
-
-        // detect whether current session user is the ROOM_MASTER for this room
-        (async () => {
-            try {
-                const userPhone = (await getData('userPhone')) || '';
-                const membersRaw = await getData(`members:${roomId}`);
-                const members = membersRaw ? JSON.parse(membersRaw) : [];
-                const normalizedUser = normalizePhone(userPhone || '');
-                const matched = members.find((m: any) => normalizePhone(m.phoneNumber || m.phone || '') === normalizedUser);
-                setIsRoomMaster(Boolean(matched && matched.role === ROLE.ROOM_MASTER));
-            } catch (e) {
-                // ignore
-            }
-        })();
     }, [roomId]);
 
     const handleShowExpense = (invoiceId: number) => {
@@ -81,20 +61,12 @@ export default function InvoiceHistoryTab() {
     return (
         <View className="flex-1 bg-gray-50 mt-2 mx-1">
             {invoiceHistory.map((invoice) => (
-                isRoomMaster ? (
-                    <RoomMasterInvoiceHistoryCard
-                        key={invoice.id}
-                        invoice={invoice}
-                        roomId={String(roomId)}
-                        onShowExpense={handleShowExpense}
-                    />
-                ) : (
-                    <MemberInvoiceHistoryCard
-                        key={invoice.id}
-                        invoice={invoice}
-                        onShowExpense={handleShowExpense}
-                    />
-                )
+                <RoomMasterInvoiceHistoryCard
+                    key={invoice.id}
+                    invoice={invoice}
+                    onShowExpense={handleShowExpense}
+                    roomId={roomId as string}
+                />
             ))}
         </View>
     );

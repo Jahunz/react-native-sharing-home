@@ -79,10 +79,13 @@ export default function DrawerCreateMonthlyInvoice({
                             />
                             <StyledInput
                                 label="Cost (VND)"
-                                value={expenseAmount.toLocaleString()}
-                                onChangeText={(value) =>
-                                    onChangeAmount(Number(value))
-                                }
+                                value={expenseAmount ? String(expenseAmount).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''}
+                                onChangeText={(value) => {
+                                    // sanitize input: remove all non-digit characters
+                                    const cleaned = String(value || '').replace(/\D+/g, '');
+                                    const num = cleaned ? Number(cleaned) : 0;
+                                    onChangeAmount(num);
+                                }}
                             />
                         </View>
                         <View>

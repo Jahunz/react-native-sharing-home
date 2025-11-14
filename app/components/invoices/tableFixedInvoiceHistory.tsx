@@ -3,6 +3,11 @@ import { Text } from "@/components/ui/text";
 import { Expense } from "../../constants/types";
 import HeaderTableFixedInvoice from "./headerTableFixedInvoice";
 
+const formatAmount = (v: number | bigint) => {
+    const s = String(v || '0');
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 interface TableFixedInvoiceHistoryProps {
     expenses: Expense[];
 }
@@ -16,9 +21,9 @@ export default function TableFixedInvoiceHistory({
     return (
         <>
             <HeaderTableFixedInvoice />
-            {expenses.map((expense) => (
+            {expenses.map((expense, idx) => (
                 <Grid
-                    key={expense.name}
+                    key={String((expense as any).id ?? expense.name ?? idx)}
                     className="gap-2 py-2 border-b border-gray-200 bg-white"
                     _extra={{ className: "grid-cols-12" }}
                 >
@@ -35,7 +40,7 @@ export default function TableFixedInvoiceHistory({
                         _extra={{ className: "col-span-4" }}
                     >
                         <Text size="md" className="font-normal text-right">
-                            {expense.price.toLocaleString()}
+                            {formatAmount((expense.price as any) ?? 0n)}
                         </Text>
                     </GridItem>
                     <GridItem
@@ -51,9 +56,7 @@ export default function TableFixedInvoiceHistory({
                         _extra={{ className: "col-span-4" }}
                     >
                         <Text size="md" className="font-medium text-right">
-                            {(
-                                expense.price * expense.quantity
-                            ).toLocaleString()}
+                            {formatAmount((BigInt((expense as any).price || 0n) * BigInt(expense.quantity || 1)))}
                         </Text>
                     </GridItem>
                 </Grid>
