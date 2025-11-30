@@ -143,7 +143,7 @@ const useHMRoomDetail = (roomId?: string) => {
                         const resolved: Member = {
                             id: Date.now(),
                             avatar: isCurrent ? (profilePhoto || uAny.avatar) : (uAny.avatar || undefined),
-                            name: isCurrent ? ((profile && ((profile.firstName || '') + ' ' + (profile.lastName || '')).trim()) || uAny.name || uAny.phoneNumber || uAny.phone || 'Member') : (uAny.name || uAny.firstName || uAny.phoneNumber || uAny.phone || 'Member'),
+                            name: isCurrent ? ((profile && (profile.name ? profile.name : `${profile.firstName || ''} ${profile.lastName || ''}`.trim())) || uAny.name || uAny.phoneNumber || uAny.phone || 'Member') : (uAny.name || uAny.firstName || uAny.phoneNumber || uAny.phone || 'Member'),
                             phoneNumber: (uAny.phoneNumber || uAny.phone || '') as string,
                             role: (uAny.role as any) || ROLE.ROOM_MEMBER,
                         };
@@ -188,7 +188,7 @@ const useHMRoomDetail = (roomId?: string) => {
                     const resolved: Member = {
                         id: match.id,
                         avatar: isCurrent ? (profilePhoto || mAny.avatar) : (mAny.avatar || undefined),
-                        name: isCurrent ? ((profile && ((profile.firstName || '') + ' ' + (profile.lastName || '')).trim()) || mAny.name || mAny.phoneNumber || 'Member') : (mAny.name || mAny.phoneNumber || 'Member'),
+                        name: isCurrent ? ((profile && (profile.name ? profile.name : `${profile.firstName || ''} ${profile.lastName || ''}`.trim())) || mAny.name || mAny.phoneNumber || 'Member') : (mAny.name || mAny.phoneNumber || 'Member'),
                         phoneNumber: (mAny.phoneNumber || '') as string,
                         role: (mAny.role as any) || ROLE.ROOM_MEMBER,
                     };

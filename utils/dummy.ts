@@ -19,20 +19,6 @@ export const dummy_home_master_room_list: HMRoom[] = [
         debtAmount: 150.5,
         nextInvoiceDate: "2024-02-15",
     },
-    {
-        id: 2,
-        name: "Room 2",
-        memberCount: 1,
-        debtAmount: 75.0,
-        nextInvoiceDate: "2024-02-20",
-    },
-    {
-        id: 3,
-        name: "Room 3",
-        memberCount: 3,
-        debtAmount: 225.75,
-        nextInvoiceDate: "2024-02-18",
-    },
 ];
 
 export const dummy_room_member_room_list: RMRoom[] = [
@@ -131,27 +117,27 @@ export const dummy_fixed_costs: FixedInvoice = {
     expenses: [
         {
             name: "Rent",
-            price: 4550000,
+            price: 4550000n,
             quantity: 1,
         },
         {
             name: "Electricity",
-            price: 4000,
+            price: 4000n,
             quantity: 120,
         },
         {
             name: "Wifi",
-            price: 150000,
+            price: 150000n,
             quantity: 1,
         },
         {
             name: "Water",
-            price: 3000,
+            price: 3000n,
             quantity: 120,
         },
         {
             name: "Rubbish",
-            price: 3000,
+            price: 3000n,
             quantity: 120,
         },
     ],

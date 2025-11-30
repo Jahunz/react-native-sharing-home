@@ -30,7 +30,7 @@ export default function SignUpScreen() {
   // Persist a basic per-phone profile placeholder (no address)
   const normalized = normalizePhone(phoneNumber || '');
   const profileKey = normalized ? `profile:${normalized}` : 'profile';
-  await storeData(profileKey, JSON.stringify({ firstName: '', lastName: '' }));
+  await storeData(profileKey, JSON.stringify({ name: '' }));
   // Default new users to room_member role and persist
   await storeData('userRole', 'room_member');
 

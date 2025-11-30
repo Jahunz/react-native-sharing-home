@@ -42,16 +42,15 @@ function ProfileField({ value, onEdit }: ProfileFieldProps) {
 }
 export default function ProfileScreen() {
   const [profile, setProfile] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
   });
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const router = useRouter();
 
-  const handleEdit = (field: string, value: string) => {
+  const handleEdit = (value: string) => {
     setProfile((profile) => {
-      const updated = { ...profile, [field]: value };
+      const updated = { ...profile, name: value };
       (async () => {
         try {
           // Persist profile per-phone when possible to avoid a global device profile
@@ -60,15 +59,15 @@ export default function ProfileScreen() {
           const profileKey = normalized ? `profile:${normalized}` : 'profile';
           await storeData(profileKey, JSON.stringify(updated));
           // Also reflect the display name into the local `users` directory
-              try {
-                const phone = await getData('userPhone');
-                if (phone) {
-                  const name = ((updated.firstName || '') + ' ' + (updated.lastName || '')).trim();
-                  await upsertUser({ phoneNumber: phone, name });
-                }
-              } catch (e) {
-                console.error('Error updating users list with profile name', e);
-              }
+          try {
+            const phone = await getData('userPhone');
+            if (phone) {
+              const name = (updated.name || '').trim();
+              await upsertUser({ phoneNumber: phone, name });
+            }
+          } catch (e) {
+            console.error('Error updating users list with profile name', e);
+          }
         } catch (e) {
           console.error('Error saving profile', e);
         }
@@ -183,7 +182,7 @@ export default function ProfileScreen() {
               const AsyncStorage = require('@react-native-async-storage/async-storage').default;
               await AsyncStorage.clear();
               // Reset local state
-              setProfile({ firstName: '', lastName: '' });
+              setProfile({ name: '' });
               setPhotoUri(null);
               setPhoneNumber('');
               // Navigate to welcome screen to reflect cleared state
@@ -215,11 +214,7 @@ export default function ProfileScreen() {
         if (user) {
           // If the user record has a name or avatar, use them to populate the profile.
           if (user.name) {
-            // split name into first/last if possible
-            const parts = (user.name || '').split(' ');
-            const firstName = parts.shift() || '';
-            const lastName = parts.join(' ') || '';
-            setProfile((p) => ({ ...p, firstName, lastName }));
+            setProfile((p) => ({ ...p, name: user.name }));
           }
           if (user.avatar) {
             setPhotoUri(user.avatar);
@@ -237,7 +232,15 @@ export default function ProfileScreen() {
             const profileJsonP = await getData(profileKey);
             if (profileJsonP) {
               const parsed = JSON.parse(profileJsonP);
-              setProfile((p) => ({ ...p, ...parsed }));
+              // Support legacy firstName/lastName stored objects by merging into `name`
+              if (parsed.name) {
+                setProfile((p) => ({ ...p, ...parsed }));
+              } else if (parsed.firstName || parsed.lastName) {
+                const name = ((parsed.firstName || '') + ' ' + (parsed.lastName || '')).trim();
+                setProfile((p) => ({ ...p, name }));
+              } else {
+                setProfile((p) => ({ ...p, ...parsed }));
+              }
             }
             const savedPhoto = await getData(photoKey);
             if (savedPhoto) setPhotoUri(savedPhoto);
@@ -293,14 +296,10 @@ export default function ProfileScreen() {
 
           {/* Profile Fields */}
           <View>
-            <ProfileField 
-              value={profile.firstName}
-              onEdit={(value) => handleEdit('firstName', value)} 
-            />
-            <ProfileField 
-              value={profile.lastName} 
-              onEdit={(value) => handleEdit('lastName', value)} 
-            />
+              <ProfileField
+                value={profile.name}
+                onEdit={(value) => handleEdit(value)}
+              />
             {/* Address field removed per request */}
           </View>
         </View>

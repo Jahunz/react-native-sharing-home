@@ -10,7 +10,6 @@ const Routes = {
     // Home Master Screens
     HOME_MASTER_DASHBOARD: "screens/home-master/dashboard",
     HOME_MASTER_ROOM_DETAIL: "screens/home-master/room-detail",
-    HOME_MASTER_INVOICE_HISTORY: "screens/home-master/invoice-history",
     // Room Master Screens
     ROOM_MASTER_ROOM_VIEW_SELECTION: "screens/room-master/room-view-selection",
     ROOM_MASTER_ROOM_DETAIL_MEMBERS: "screens/room-master/room-detail/members",

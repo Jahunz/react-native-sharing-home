@@ -30,13 +30,13 @@ export default function MembersTab() {
                         const profilePhoto = (await getData(photoKey)) || null;
                         if (userPhone && profile) {
                             const updated = parsed.map((m: any) => {
-                                if (m.phoneNumber === userPhone) {
-                                    const displayName = `${(profile.firstName || '').trim()}${profile.lastName ? ` ${profile.lastName}` : ''}`.trim();
-                                    return {
-                                        ...m,
-                                        name: displayName || m.name,
-                                        avatar: profilePhoto || m.avatar,
-                                    };
+                                        if (m.phoneNumber === userPhone) {
+                                            const displayName = profile && profile.name ? profile.name : `${(profile?.firstName || '').trim()}${profile?.lastName ? ` ${profile.lastName}` : ''}`.trim();
+                                            return {
+                                                ...m,
+                                                name: displayName || m.name,
+                                                avatar: profilePhoto || m.avatar,
+                                            };
                                 }
                                 return m;
                             });

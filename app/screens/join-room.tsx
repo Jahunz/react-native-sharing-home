@@ -232,7 +232,7 @@ export default function JoinRoomScreen() {
   const profileJson = await getData(profileKey);
   const profile = profileJson ? JSON.parse(profileJson) : {};
   const profilePhoto = await getData(photoKey);
-  const displayName = `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Member';
+  const displayName = (profile && profile.name) ? profile.name : `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || 'Member';
 
   const membersRaw = await getData(`members:${persistedRoomId}`);
   const members = membersRaw ? JSON.parse(membersRaw) : [];

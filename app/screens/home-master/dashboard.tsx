@@ -35,7 +35,7 @@ export default function HomeDetailsScreen() {
                     const profileKey = normalized ? `profile:${normalized}` : 'profile';
                     const profileJson = await getData(profileKey);
                     const profile = profileJson ? JSON.parse(profileJson) : {};
-                    const displayName = `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
+                    const displayName = profile && profile.name ? profile.name : `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
 
                     const filtered = parsed.filter((r: any) => {
                         if (!r) return false;
@@ -133,8 +133,8 @@ export default function HomeDetailsScreen() {
 
                 const homeMasterInfo: any = {};
                 if (userPhone) homeMasterInfo.phone = userPhone;
-                if (profile && (profile.firstName || profile.lastName)) {
-                    homeMasterInfo.name = `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
+                if (profile && (profile.name || profile.firstName || profile.lastName)) {
+                    homeMasterInfo.name = profile.name ? profile.name : `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
                 }
 
                 const newRooms = [

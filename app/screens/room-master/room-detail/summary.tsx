@@ -14,6 +14,7 @@ import { View } from "react-native";
 
 interface SummaryInvoiceHistory extends ShortSummaryInvoiceHistory {
     is_show_expense: boolean;
+    actual_cost: number;
 }
 export default function SummaryTab() {
     const router = useRouter();
@@ -24,7 +25,10 @@ export default function SummaryTab() {
 
     const [invoiceHistory, setInvoiceHistory] = useState<
         SummaryInvoiceHistory[]
-    >(dummy_room_master_invoice_history_list);
+    >(dummy_room_master_invoice_history_list.map((item) => ({
+        ...item,
+        actual_cost: item.total_spent,
+    })));
 
     const [currentInvoice, setCurrentInvoice] =
         useState<FullSummaryInvoiceHistory>();
